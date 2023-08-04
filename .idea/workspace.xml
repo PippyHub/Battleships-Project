@@ -4,16 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="Printing ships">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Gameplay.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Images/pegs.png" afterDir="false" />
+    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="Clicking on ships works">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Images.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Images.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Images/BattleShip Sprites.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Ship.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ship.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Square.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peg.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,13 +88,21 @@
       <option name="project" value="LOCAL" />
       <updated>1691143811870</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Clicking on ships works">
+      <created>1691153330894</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1691153330894</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Board prints" />
     <MESSAGE value="Added ships" />
     <MESSAGE value="Printing ships" />
-    <option name="LAST_COMMIT_MESSAGE" value="Printing ships" />
+    <MESSAGE value="Clicking on ships works" />
+    <option name="LAST_COMMIT_MESSAGE" value="Clicking on ships works" />
   </component>
 </project>

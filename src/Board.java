@@ -6,18 +6,22 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     static final int SQR_SIZE = 64;
     static final int SQR_AMOUNT = 10;
     static final int BOARD_SIZE = SQR_SIZE * SQR_AMOUNT;
-    static final int SHIP_AREA_SIZE = BOARD_SIZE;
+    static final int SHIP_AREA_SIZE = SQR_SIZE * 11;
     static LinkedList<Peg> pe = new LinkedList<>();
     static LinkedList<Ship> sh = new LinkedList<>();
     Images img = new Images();
     private final Image[] images;
     public static Ship selectedShip = null;
     public Board() {
-        shipList(0, 0, Ship.Name.BATTLESHIP);
-        shipList(0, 1, Ship.Name.CARRIER);
+        shipList(11, 1, Ship.Name.CARRIER);
+        shipList(13, 1, Ship.Name.BATTLESHIP);
+        shipList(15, 1, Ship.Name.CRUISER);
+        shipList(17, 1, Ship.Name.SUBMARINE);
+        shipList(19, 1, Ship.Name.DESTROYER);
 
         images = img.loadImages();
         addMouseListener(this);
+        addMouseMotionListener(this);
     }
     public void pegList(int sX, int sY) {
         new Peg(sX, sY, pe);
@@ -59,14 +63,14 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
 
             switch (s.click) {
                 case DESELECTED -> {
+                    breadth *= SQR_SIZE + 20;
+                    length *= SQR_SIZE + 20;
+                }
+                case SELECTED, PLACED -> {
                     breadth *= SQR_SIZE;
                     length *= SQR_SIZE;
                 }
-                case SELECTED, PLACED -> {
-                    breadth *= SQR_SIZE + 1;
-                    length *= SQR_SIZE;
-                }
-            };
+            }
 
             switch (s.rotation) {
                 case VERTICAL -> g.fillRoundRect(s.x, s.y, breadth, length, arc, arc);
@@ -95,22 +99,39 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         return null;
     }
     public void actionPerformed(ActionEvent e) {}
-    public void mousePressed(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+        selectedShip = getShip(e.getX(), e.getY());
+    }
+    public void mouseReleased(MouseEvent e) {
+        if (selectedShip != null) {
+            selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
+            selectedShip = null;
+            repaint();
+        }
+    }
     public void mouseClicked(MouseEvent e) {
         selectedShip = getShip(e.getX(), e.getY());
         if (selectedShip != null) {
-            if (SwingUtilities.isRightMouseButton(e)) {
-                selectedShip.rotation = switch (selectedShip.rotation) {
-                    case VERTICAL -> Ship.Rotation.HORIZONTAL;
-                    case HORIZONTAL -> Ship.Rotation.VERTICAL;
-                };
+            if (SwingUtilities.isRightMouseButton(e) && selectedShip.click == Ship.Click.PLACED) {
+                selectedShip.rotate();
+                selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
             }
+            selectedShip = null;
+            repaint();
         }
-        repaint();
     }
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {
+        if (selectedShip != null) {
+            selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
+            selectedShip = null;
+        }
+    }
     public void mouseEntered(MouseEvent e) {}
-    public void mouseDragged(MouseEvent e) {}
+    public void mouseDragged(MouseEvent e) {
+        if (selectedShip != null) {
+            selectedShip.move(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
+            repaint();
+        }
+    }
     public void mouseMoved(MouseEvent e) {}
 }
