@@ -9,6 +9,9 @@ public class Ship {
     public enum Rotation {
         VERTICAL, HORIZONTAL
     }
+    public enum Player {
+        PLAYER, ENEMY
+    }
     static final int SQR_SIZE = Board.SQR_SIZE;
     static final int SQR_AMOUNT = Board.SQR_AMOUNT;
     int x, y, sX, sY, startX, startY;
@@ -49,23 +52,38 @@ public class Ship {
         this.sY = sY;
     }
     public void canPlace(int sX, int sY){
-       boolean bounds = switch (rotation) {
-            case VERTICAL -> sX > 9 || sY + length - 1 > 9;
-            case HORIZONTAL -> sX + length - 1 > 9 || sY > 9;
-       };
-
-       if (bounds) {
+       if (bounds(sX, sY) || overlap(sX, sY)) {
            click = Click.DESELECTED;
        } else {
            click = Click.PLACED;
        }
-
-       if (click == Click.DESELECTED) {
-           rotation = Rotation.VERTICAL;
-           this.x = startX * SQR_SIZE;
-           this.y = startY * SQR_SIZE;
-           this.sX = startX;
-           this.sY = startY;
-       }
+       reset();
     }
+    public void reset() {
+        if (click == Click.DESELECTED) {
+            rotation = Rotation.VERTICAL;
+            this.x = startX * SQR_SIZE;
+            this.y = startY * SQR_SIZE;
+            this.sX = startX;
+            this.sY = startY;
+        }
+    }
+    public boolean bounds(int sX, int sY) {
+        return switch (rotation) {
+            case VERTICAL -> sX > 9 || sY + (length - 1) > 9;
+            case HORIZONTAL -> sX + (length - 1) > 9 || sY > 9;
+        };
+    }
+    public boolean overlap(int sX, int sY) {
+        for (Ship s : sh) {
+            if (s != this) {
+                return switch (rotation) {
+                    case VERTICAL -> false;
+                    case HORIZONTAL -> false;
+                };
+            }
+        }
+        return false;
+    }
+
 }

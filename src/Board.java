@@ -92,8 +92,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         int sY = y / SQR_SIZE;
         for (Ship s : sh) {
             switch (s.rotation) {
-                case VERTICAL -> { if(sY >= s.sY && sY <= s.sY + s.length && sX == s.sX) return s; }
-                case HORIZONTAL -> { if(sX >= s.sX && sX <= s.sX + s.length && sY == s.sY) return s; }
+                case VERTICAL -> { if(sY >= s.sY && sY <= s.sY + (s.length - 1) && sX == s.sX) return s; }
+                case HORIZONTAL -> { if(sX >= s.sX && sX <= s.sX + (s.length - 1) && sY == s.sY) return s; }
             }
         }
         return null;
@@ -122,8 +122,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public void mouseExited(MouseEvent e) {
         if (selectedShip != null) {
-            selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
+            selectedShip.click = Ship.Click.DESELECTED;
+            selectedShip.reset();
             selectedShip = null;
+            repaint();
         }
     }
     public void mouseEntered(MouseEvent e) {}
