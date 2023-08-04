@@ -77,13 +77,24 @@ public class Ship {
     public boolean overlap(int sX, int sY) {
         for (Ship s : sh) {
             if (s != this) {
-                return switch (rotation) {
-                    case VERTICAL -> false;
-                    case HORIZONTAL -> false;
-                };
+                int squareX = 0;
+                int squareY = 0;
+                switch (rotation) {
+                    case VERTICAL -> squareY += (length - 1);
+                    case HORIZONTAL -> squareX += (length - 1);
+                }
+                while (squareX != 0 || squareY != 0) {
+                    if (Board.getShip(sX + squareX * SQR_SIZE, sY + squareY * SQR_SIZE) != null) {
+                        System.out.println(true);
+                        return true;
+                    }
+                    switch (rotation) {
+                        case VERTICAL -> squareY --;
+                        case HORIZONTAL -> squareX --;
+                    }
+                }
             }
         }
         return false;
     }
-
 }

@@ -37,13 +37,12 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         paintPegs(g);
     }
     public void drawGrid(Graphics g, int gridSize, int size) {
+        g.setColor(Color.BLACK);
         int cellSize = size / gridSize;
         for (int x = 0; x <= size; x += cellSize) {
-            g.setColor(Color.BLACK);
             g.drawLine(x, 0, x, size);
         }
         for (int y = 0; y <= size; y += cellSize) {
-            g.setColor(Color.BLACK);
             g.drawLine(0, y, size, y);
         }
     }
