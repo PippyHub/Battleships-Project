@@ -3,11 +3,19 @@ public class Ship {
     public enum Name {
         CARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER
     }
+    public enum Click {
+        DESELECTED, SELECTED, PLACED
+    }
+    public enum Rotation {
+        VERTICAL, HORIZONTAL
+    }
     static final int SQR_SIZE = Board.SQR_SIZE;
     static final int SQR_AMOUNT = Board.SQR_AMOUNT;
     int x, y, sX, sY;
     LinkedList<Ship> sh;
     Name name;
+    Click click = Click.DESELECTED;
+    Rotation rotation = Rotation.HORIZONTAL;
     public Ship(int sX, int sY, Name name, LinkedList<Ship> sh) {
         this.x = sX * SQR_SIZE;
         this.y = sY * SQR_SIZE;

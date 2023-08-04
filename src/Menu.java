@@ -7,7 +7,7 @@ public class Menu extends JFrame {
 
     public Menu() {
         setTitle("Battleship");
-        this.getContentPane().setPreferredSize(new Dimension(BOARD_SIZE, BOARD_SIZE + SHIP_AREA_SIZE));
+        this.getContentPane().setPreferredSize(new Dimension(BOARD_SIZE + SHIP_AREA_SIZE, BOARD_SIZE));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         this.add(panel);
