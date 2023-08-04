@@ -7,7 +7,8 @@ public class Board extends JPanel implements ActionListener, MouseListener {
     static final int SQR_AMOUNT = 8;
     static final int BOARD_SIZE = SQR_SIZE * SQR_AMOUNT;
     static final int SHIP_AREA_SIZE = 256;
-    public static LinkedList<Square> ps = new LinkedList<>();
+    LinkedList<Square> sq = new LinkedList<>();
+    LinkedList<Ship> sh = new LinkedList<>();
     Images img = new Images();
     private final Image[] images;
 
@@ -21,11 +22,14 @@ public class Board extends JPanel implements ActionListener, MouseListener {
             }
         }
     }
-    public static void squareList(int sX, int sY) {
-        new Square(sX, sY, ps);
+    public void squareList(int sX, int sY) {
+        new Square(sX, sY, sq);
+    }
+    public void shipList(int sX, int sY, Ship.Name name) {
+        new Ship(sX, sY, name, sh);
     }
     public void paint(Graphics g) {
-        for (Square s : ps) {
+        for (Square s : sq) {
             int index = switch (s.state) {
                 case HIT -> 0;
                 case MISS -> 1;

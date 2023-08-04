@@ -6,14 +6,14 @@ public class Square {
     static final int SQR_SIZE = Board.SQR_SIZE;
     static final int SQR_AMOUNT = Board.SQR_AMOUNT;
     int x, y, sX, sY;
-    LinkedList<Square> ps;
+    LinkedList<Square> sq;
     State state = State.EMPTY;
-    public Square(int sX, int sY, LinkedList<Square> ps) {
+    public Square(int sX, int sY, LinkedList<Square> sq) {
         this.x = sX * SQR_SIZE;
         this.y = sY * SQR_SIZE;
         this.sX = sX;
         this.sY = sY;
-        this.ps = ps;
-        ps.add(this);
+        this.sq = sq;
+        sq.add(this);
     }
 }
