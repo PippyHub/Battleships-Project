@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="Working on overlap">
+    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="Overlap getShip check">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Ship.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Ship.java" afterDir="false" />
@@ -109,7 +109,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691159321066</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Overlap getShip check">
+      <created>1691162209521</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1691162209521</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -119,6 +126,7 @@
     <MESSAGE value="Clicking on ships works" />
     <MESSAGE value="Moving ships" />
     <MESSAGE value="Working on overlap" />
-    <option name="LAST_COMMIT_MESSAGE" value="Working on overlap" />
+    <MESSAGE value="Overlap getShip check" />
+    <option name="LAST_COMMIT_MESSAGE" value="Overlap getShip check" />
   </component>
 </project>

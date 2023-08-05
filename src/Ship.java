@@ -3,24 +3,25 @@ public class Ship {
     public enum Name {
         CARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER
     }
+    public enum Player {
+        PLAYER, ENEMY
+    }
     public enum Click {
         DESELECTED, SELECTED, PLACED
     }
     public enum Rotation {
         VERTICAL, HORIZONTAL
     }
-    public enum Player {
-        PLAYER, ENEMY
-    }
     static final int SQR_SIZE = Board.SQR_SIZE;
     static final int SQR_AMOUNT = Board.SQR_AMOUNT;
     int x, y, sX, sY, startX, startY;
     LinkedList<Ship> sh;
     Name name;
+    Player player;
     Click click = Click.DESELECTED;
     Rotation rotation = Rotation.VERTICAL;
     int length;
-    public Ship(int sX, int sY, Name name, LinkedList<Ship> sh) {
+    public Ship(int sX, int sY, Name name, Player player, LinkedList<Ship> sh) {
         this.x = sX * SQR_SIZE;
         this.y = sY * SQR_SIZE;
         this.sX = sX;
@@ -28,6 +29,7 @@ public class Ship {
         this.startX = sX;
         this.startY = sY;
         this.name = name;
+        this.player = player;
         this.sh = sh;
         sh.add(this);
 
@@ -77,20 +79,18 @@ public class Ship {
     public boolean overlap(int sX, int sY) {
         for (Ship s : sh) {
             if (s != this) {
-                int squareX = 0;
-                int squareY = 0;
-                switch (rotation) {
-                    case VERTICAL -> squareY += (length - 1);
-                    case HORIZONTAL -> squareX += (length - 1);
-                }
-                while (squareX != 0 || squareY != 0) {
-                    if (Board.getShip(sX + squareX * SQR_SIZE, sY + squareY * SQR_SIZE) != null) {
-                        System.out.println(true);
-                        return true;
-                    }
+                int squareX = sX;
+                int squareY = sY;
+                int squares = 0;
+                while (squares < this.length) {
+                    boolean overlap = switch (s.rotation) {
+                        case VERTICAL -> squareX == s.sX && squareY >= s.sY && squareY < s.sY + s.length;
+                        case HORIZONTAL -> squareY == s.sY && squareX >= s.sX && squareX < s.sX + s.length;
+                    };
+                    if (overlap) return true;
                     switch (rotation) {
-                        case VERTICAL -> squareY --;
-                        case HORIZONTAL -> squareX --;
+                        case VERTICAL -> { squareY++; squares++; }
+                        case HORIZONTAL -> { squareX++; squares++; }
                     }
                 }
             }

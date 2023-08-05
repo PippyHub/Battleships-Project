@@ -51,7 +51,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
             Color color = switch (s.name) {
                 case CARRIER -> Color.blue;
                 case BATTLESHIP -> Color.green;
-                case CRUISER, SUBMARINE -> Color.pink;
+                case CRUISER -> Color.pink;
+                case SUBMARINE -> Color.cyan;
                 case DESTROYER -> Color.orange;
             };
             g.setColor(color);
