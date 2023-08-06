@@ -68,7 +68,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public boolean placed() {
         int shipAmount = 0;
-        for (Ship s : sh ){
+        for (Ship s : sh){
             if (s.player == Ship.Player.PLAYER_SHOWN) {
                 shipAmount++;
             }
@@ -109,7 +109,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public void paintShips(Graphics g) {
         for (Ship s : sh) {
-            if (s.player == Ship.Player.PLAYER_SHOWN || s.player == Ship.Player.ENEMY_HIDDEN && s.sunk == Ship.Sunk.NOT_SUNK) {
+            if (s.player == Ship.Player.PLAYER_SHOWN || s.player == Ship.Player.ENEMY_HIDDEN && s.sunk == Ship.Sunk.SUNK) {
                 Color color = switch (s.name) {
                     case CARRIER -> Color.orange;
                     case BATTLESHIP -> Color.yellow;
