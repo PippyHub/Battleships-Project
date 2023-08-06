@@ -13,21 +13,44 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     private final Image[] images;
     public static Ship selectedShip = null;
     public Board() {
-        shipList(11, 1, Ship.Name.CARRIER);
-        shipList(13, 1, Ship.Name.BATTLESHIP);
-        shipList(15, 1, Ship.Name.CRUISER);
-        shipList(17, 1, Ship.Name.SUBMARINE);
-        shipList(19, 1, Ship.Name.DESTROYER);
-
         images = img.loadImages();
         addMouseListener(this);
         addMouseMotionListener(this);
+        //player();
+        enemy();
+    }
+    public void player() {
+        shipList(11, 1, Ship.Name.CARRIER, Ship.Player.PLAYER);
+        shipList(13, 1, Ship.Name.BATTLESHIP, Ship.Player.PLAYER);
+        shipList(15, 1, Ship.Name.CRUISER, Ship.Player.PLAYER);
+        shipList(17, 1, Ship.Name.SUBMARINE, Ship.Player.PLAYER);
+        shipList(19, 1, Ship.Name.DESTROYER, Ship.Player.PLAYER);
+    }
+    public void enemy() {
+        shipList(1, 1, Ship.Name.CARRIER, Ship.Player.ENEMY);
+        shipList(3, 1, Ship.Name.BATTLESHIP, Ship.Player.ENEMY);
+        shipList(5, 1, Ship.Name.CRUISER, Ship.Player.ENEMY);
+        shipList(7, 1, Ship.Name.SUBMARINE, Ship.Player.ENEMY);
+        shipList(9, 1, Ship.Name.DESTROYER, Ship.Player.ENEMY);
+
+        int placed = 0;
+        while (placed < 5) {
+            System.out.println(placed);
+            for (Ship s : sh) {
+                if (s.player == Ship.Player.ENEMY) {
+                    int sX = (int) (Math.random() * 10) + 1;
+                    int sY = (int) (Math.random() * 10) + 1;
+                    sX += 10;
+                    if(s.enemyPlace(sX, sY))placed++;
+                }
+            }
+        }
+    }
+    public void shipList(int sX, int sY, Ship.Name name, Ship.Player player) {
+        new Ship(sX, sY, name, player, sh);
     }
     public void pegList(int sX, int sY) {
         new Peg(sX, sY, pe);
-    }
-    public void shipList(int sX, int sY, Ship.Name name) {
-        new Ship(sX, sY, name, sh);
     }
     public void paint(Graphics g) {
         g.setColor(new Color(86, 86, 86));
@@ -49,11 +72,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     public void paintShips(Graphics g) {
         for (Ship s : sh) {
             Color color = switch (s.name) {
-                case CARRIER -> Color.blue;
-                case BATTLESHIP -> Color.green;
-                case CRUISER -> Color.pink;
+                case CARRIER -> Color.orange;
+                case BATTLESHIP -> Color.yellow;
+                case CRUISER -> Color.green;
                 case SUBMARINE -> Color.cyan;
-                case DESTROYER -> Color.orange;
+                case DESTROYER -> Color.pink;
             };
             g.setColor(color);
 
@@ -61,16 +84,8 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
             int length = s.length;
             int arc = 20;
 
-            switch (s.click) {
-                case DESELECTED -> {
-                    breadth *= SQR_SIZE + 20;
-                    length *= SQR_SIZE + 20;
-                }
-                case SELECTED, PLACED -> {
-                    breadth *= SQR_SIZE;
-                    length *= SQR_SIZE;
-                }
-            }
+            breadth *= SQR_SIZE;
+            length *= SQR_SIZE;
 
             switch (s.rotation) {
                 case VERTICAL -> g.fillRoundRect(s.x, s.y, breadth, length, arc, arc);
@@ -103,7 +118,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         selectedShip = getShip(e.getX(), e.getY());
     }
     public void mouseReleased(MouseEvent e) {
-        if (selectedShip != null) {
+        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
             selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
             selectedShip = null;
             repaint();
@@ -111,7 +126,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public void mouseClicked(MouseEvent e) {
         selectedShip = getShip(e.getX(), e.getY());
-        if (selectedShip != null) {
+        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
             if (SwingUtilities.isRightMouseButton(e) && selectedShip.click == Ship.Click.PLACED) {
                 selectedShip.rotate();
                 selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
@@ -121,16 +136,16 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         }
     }
     public void mouseExited(MouseEvent e) {
-        if (selectedShip != null) {
+        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
             selectedShip.click = Ship.Click.DESELECTED;
-            selectedShip.reset();
+            selectedShip.deselect();
             selectedShip = null;
             repaint();
         }
     }
     public void mouseEntered(MouseEvent e) {}
     public void mouseDragged(MouseEvent e) {
-        if (selectedShip != null) {
+        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
             selectedShip.move(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
             repaint();
         }

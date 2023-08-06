@@ -46,6 +46,16 @@ public class Ship {
             case HORIZONTAL -> Ship.Rotation.VERTICAL;
         };
     }
+    public boolean enemyPlace(int sX, int sY) {
+        if (((int) (Math.random() * 2) + 1) == 1) this.rotate();
+        if (bounds(sX, sY) || overlap(sX, sY)){
+            System.out.println(false);
+            return false;
+        } else {
+            place(sX, sY);
+            return true;
+        }
+    }
     public void move(int sX, int sY){
         click = Click.SELECTED;
         this.x = sX * SQR_SIZE;
@@ -54,31 +64,45 @@ public class Ship {
         this.sY = sY;
     }
     public void canPlace(int sX, int sY){
-       if (bounds(sX, sY) || overlap(sX, sY)) {
-           click = Click.DESELECTED;
-       } else {
-           click = Click.PLACED;
-       }
-       reset();
-    }
-    public void reset() {
-        if (click == Click.DESELECTED) {
-            rotation = Rotation.VERTICAL;
-            this.x = startX * SQR_SIZE;
-            this.y = startY * SQR_SIZE;
-            this.sX = startX;
-            this.sY = startY;
+        if (bounds(sX, sY) || overlap(sX, sY)) {
+            click = Click.DESELECTED;
+        } else {
+            click = Click.PLACED;
+        }
+        switch (click) {
+            case DESELECTED -> deselect();
+            case PLACED -> place(sX, sY);
         }
     }
+    public void deselect() {
+        rotation = Rotation.VERTICAL;
+        this.x = startX * SQR_SIZE;
+        this.y = startY * SQR_SIZE;
+        this.sX = startX;
+        this.sY = startY;
+    }
+    public void place(int sX, int sY) {
+        this.x = sX * SQR_SIZE;
+        this.y = sY * SQR_SIZE;
+        this.sX = sX;
+        this.sY = sY;
+    }
     public boolean bounds(int sX, int sY) {
-        return switch (rotation) {
-            case VERTICAL -> sX > 9 || sY + (length - 1) > 9;
-            case HORIZONTAL -> sX + (length - 1) > 9 || sY > 9;
-        };
+        if (player == Player.PLAYER) {
+            return switch (rotation) {
+                case VERTICAL -> sX > 9 || sY + (length - 1) > 9;
+                case HORIZONTAL -> sX + (length - 1) > 9 || sY > 9;
+            };
+        } else {
+            return switch (rotation) {
+                case VERTICAL -> sX < 11 || sX > 20 || sY + (length - 1) > 9;
+                case HORIZONTAL -> sX < 11 || sX + (length - 1) > 20 || sY > 9;
+            };
+        }
     }
     public boolean overlap(int sX, int sY) {
         for (Ship s : sh) {
-            if (s != this) {
+            if (s != this && s.player == this.player) {
                 int squareX = sX;
                 int squareY = sY;
                 int squares = 0;
