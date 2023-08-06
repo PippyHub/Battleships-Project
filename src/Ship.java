@@ -49,7 +49,7 @@ public class Ship {
     public boolean enemyPlace(int sX, int sY) {
         if (((int) (Math.random() * 2) + 1) == 1) this.rotate();
         if (bounds(sX, sY) || overlap(sX, sY)){
-            System.out.println(false);
+            //System.out.println(false);
             return false;
         } else {
             place(sX, sY);

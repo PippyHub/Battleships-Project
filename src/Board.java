@@ -34,14 +34,15 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         shipList(9, 1, Ship.Name.DESTROYER, Ship.Player.ENEMY);
 
         int placed = 0;
-        while (placed < 5) {
-            System.out.println(placed);
+        while (placed != 5) {
+            placed = 0;
             for (Ship s : sh) {
                 if (s.player == Ship.Player.ENEMY) {
                     int sX = (int) (Math.random() * 10) + 1;
                     int sY = (int) (Math.random() * 10) + 1;
                     sX += 10;
-                    if(s.enemyPlace(sX, sY))placed++;
+                    System.out.println(sX);
+                    if(s.enemyPlace(sX, sY)) placed++;
                 }
             }
         }
