@@ -4,7 +4,10 @@ public class Ship {
         CARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER
     }
     public enum Player {
-        PLAYER, ENEMY_HIDDEN, ENEMY_SHOWN
+        PLAYER_SHOWN, ENEMY_HIDDEN
+    }
+    public enum Sunk {
+        SUNK, NOT_SUNK
     }
     public enum Click {
         DESELECTED, SELECTED, PLACED
@@ -19,7 +22,9 @@ public class Ship {
     Player player;
     Click click = Click.DESELECTED;
     Rotation rotation = Rotation.VERTICAL;
+    Sunk sunk = Sunk.NOT_SUNK;
     int length;
+    int sinking;
     public Ship(int sX, int sY, Name name, Player player, LinkedList<Ship> sh) {
         this.x = sX * SQR_SIZE;
         this.y = sY * SQR_SIZE;
@@ -85,7 +90,7 @@ public class Ship {
         this.sY = sY;
     }
     public boolean bounds(int sX, int sY) {
-        if (player == Player.PLAYER) {
+        if (player == Player.PLAYER_SHOWN) {
             return switch (rotation) {
                 case VERTICAL -> sX > 9 || sY + (length - 1) > 9;
                 case HORIZONTAL -> sX + (length - 1) > 9 || sY > 9;

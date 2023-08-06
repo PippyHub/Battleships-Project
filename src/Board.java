@@ -22,11 +22,11 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         enemy();
     }
     public void player() {
-        shipList(11, 1, Ship.Name.CARRIER, Ship.Player.PLAYER);
-        shipList(13, 1, Ship.Name.BATTLESHIP, Ship.Player.PLAYER);
-        shipList(15, 1, Ship.Name.CRUISER, Ship.Player.PLAYER);
-        shipList(17, 1, Ship.Name.SUBMARINE, Ship.Player.PLAYER);
-        shipList(19, 1, Ship.Name.DESTROYER, Ship.Player.PLAYER);
+        //shipList(11, 1, Ship.Name.CARRIER, Ship.Player.PLAYER_SHOWN);
+        //shipList(13, 1, Ship.Name.BATTLESHIP, Ship.Player.PLAYER_SHOWN);
+        //shipList(15, 1, Ship.Name.CRUISER, Ship.Player.PLAYER_SHOWN);
+        //shipList(17, 1, Ship.Name.SUBMARINE, Ship.Player.PLAYER_SHOWN);
+        shipList(19, 1, Ship.Name.DESTROYER, Ship.Player.PLAYER_SHOWN);
     }
     public void enemy() {
         shipList(1, 1, Ship.Name.CARRIER, Ship.Player.ENEMY_HIDDEN);
@@ -58,20 +58,28 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     public void paint(Graphics g) {
         g.setColor(new Color(86, 86, 86));
         g.fillRect(0, 0, BOARD_SIZE + SHIP_AREA_SIZE, BOARD_SIZE);
-        drawGrid(g, SQR_AMOUNT, BOARD_SIZE, 0, 0);
-        if (game.state == Game.State.PLAYING) drawGrid(g, SQR_AMOUNT, BOARD_SIZE, SHIP_AREA_SIZE, 0);
-        paintShips(g);
-        paintPegs(g);
-        if (placed() && game.state == Game.State.PLACING) button(g);
+        if (game.state != Game.State.OVER) {
+            drawGrid(g, SQR_AMOUNT, BOARD_SIZE, 0, 0);
+            if (game.state == Game.State.PLAYING) drawGrid(g, SQR_AMOUNT, BOARD_SIZE, SHIP_AREA_SIZE, 0);
+            paintShips(g);
+            paintPegs(g);
+            if (placed() && game.state == Game.State.PLACING) button(g);
+        }
     }
     public boolean placed() {
+        int shipAmount = 0;
+        for (Ship s : sh ){
+            if (s.player == Ship.Player.PLAYER_SHOWN) {
+                shipAmount++;
+            }
+        }
         int placed = 0;
         for (Ship s : sh) {
             if (s.click == Ship.Click.PLACED) {
                 placed++;
             }
         }
-        return placed >= 5;
+        return placed >= shipAmount;
     }
     public void button(Graphics g) {
         buttonWidth = 300;
@@ -101,7 +109,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public void paintShips(Graphics g) {
         for (Ship s : sh) {
-            if (s.player == Ship.Player.PLAYER || s.player == Ship.Player.ENEMY_HIDDEN) {
+            if (s.player == Ship.Player.PLAYER_SHOWN || s.player == Ship.Player.ENEMY_HIDDEN && s.sunk == Ship.Sunk.NOT_SUNK) {
                 Color color = switch (s.name) {
                     case CARRIER -> Color.orange;
                     case BATTLESHIP -> Color.yellow;
