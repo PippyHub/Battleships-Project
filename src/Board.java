@@ -12,7 +12,7 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     Images img = new Images();
     private final Image[] images;
     private final Game game;
-    int placed = 0;
+    int buttonWidth, buttonHeight, buttonX, buttonY, buttonArc;
     public Board() {
         images = img.loadImages();
         game = new Game(this);
@@ -29,20 +29,22 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         shipList(19, 1, Ship.Name.DESTROYER, Ship.Player.PLAYER);
     }
     public void enemy() {
-        shipList(1, 1, Ship.Name.CARRIER, Ship.Player.ENEMY);
-        shipList(3, 1, Ship.Name.BATTLESHIP, Ship.Player.ENEMY);
-        shipList(5, 1, Ship.Name.CRUISER, Ship.Player.ENEMY);
-        shipList(7, 1, Ship.Name.SUBMARINE, Ship.Player.ENEMY);
-        shipList(9, 1, Ship.Name.DESTROYER, Ship.Player.ENEMY);
+        shipList(1, 1, Ship.Name.CARRIER, Ship.Player.ENEMY_HIDDEN);
+        shipList(3, 1, Ship.Name.BATTLESHIP, Ship.Player.ENEMY_HIDDEN);
+        shipList(5, 1, Ship.Name.CRUISER, Ship.Player.ENEMY_HIDDEN);
+        shipList(7, 1, Ship.Name.SUBMARINE, Ship.Player.ENEMY_HIDDEN);
+        shipList(9, 1, Ship.Name.DESTROYER, Ship.Player.ENEMY_HIDDEN);
 
-        while (placed != 5) {
-            placed = 0;
+        int enemyPlaced = 0;
+        while (enemyPlaced != 5) {
+            enemyPlaced = 0;
             for (Ship s : sh) {
-                if (s.player == Ship.Player.ENEMY) {
+                if (s.player == Ship.Player.ENEMY_HIDDEN) {
                     int sX = (int) (Math.random() * 10) + 1;
                     int sY = (int) (Math.random() * 10) + 1;
                     sX += 10;
-                    if(s.enemyPlace(sX, sY)) placed++;
+                    if (((int) (Math.random() * 2) + 1) == 1) s.rotate();
+                    if(s.enemyPlace(sX, sY)) enemyPlaced++;
                 }
             }
         }
@@ -56,49 +58,70 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     public void paint(Graphics g) {
         g.setColor(new Color(86, 86, 86));
         g.fillRect(0, 0, BOARD_SIZE + SHIP_AREA_SIZE, BOARD_SIZE);
-        drawButton(g);
-        drawGrid(g, SQR_AMOUNT, BOARD_SIZE);
+        drawGrid(g, SQR_AMOUNT, BOARD_SIZE, 0, 0);
+        if (game.state == Game.State.PLAYING) drawGrid(g, SQR_AMOUNT, BOARD_SIZE, SHIP_AREA_SIZE, 0);
         paintShips(g);
         paintPegs(g);
+        if (placed() && game.state == Game.State.PLACING) button(g);
     }
-    public void drawButton(Graphics g){
-        int x = 0;
-        int y = 0;
-        int width = 0;
-        int height = 0;
-        g.fillRect(x, y, width, height);
+    public boolean placed() {
+        int placed = 0;
+        for (Ship s : sh) {
+            if (s.click == Ship.Click.PLACED) {
+                placed++;
+            }
+        }
+        return placed >= 5;
     }
-    public void drawGrid(Graphics g, int gridSize, int size) {
+    public void button(Graphics g) {
+        buttonWidth = 300;
+        buttonHeight = 100;
+        buttonX = BOARD_SIZE + (SHIP_AREA_SIZE / 2) - (buttonWidth / 2);
+        buttonY = (int) (BOARD_SIZE - (BOARD_SIZE * 0.25) - (buttonHeight / 2.0));
+        buttonArc = 20;
+        drawButton(g, buttonWidth, buttonHeight, buttonX, buttonY, buttonArc);
+    }
+    public void drawButton(Graphics g, int width, int height, int x, int y, int arc) {
+        g.setColor(Color.magenta);
+        g.fillRoundRect(x, y, width, height, arc, arc);
+    }
+    public void drawGrid(Graphics g, int gridSize, int size, int startX, int startY) {
         g.setColor(Color.BLACK);
         int cellSize = size / gridSize;
-        for (int x = 0; x <= size; x += cellSize) {
-            g.drawLine(x, 0, x, size);
+
+        startX = (startX / cellSize) * cellSize;
+        startY = (startY / cellSize) * cellSize;
+
+        for (int x = startX; x <= size + startX; x += cellSize) {
+            g.drawLine(x, startY, x, size);
         }
-        for (int y = 0; y <= size; y += cellSize) {
-            g.drawLine(0, y, size, y);
+        for (int y = startY; y <= size + startY; y += cellSize) {
+            g.drawLine(startX, y, startX + size, y);
         }
     }
     public void paintShips(Graphics g) {
         for (Ship s : sh) {
-            Color color = switch (s.name) {
-                case CARRIER -> Color.orange;
-                case BATTLESHIP -> Color.yellow;
-                case CRUISER -> Color.green;
-                case SUBMARINE -> Color.cyan;
-                case DESTROYER -> Color.pink;
-            };
-            g.setColor(color);
+            if (s.player == Ship.Player.PLAYER || s.player == Ship.Player.ENEMY_HIDDEN) {
+                Color color = switch (s.name) {
+                    case CARRIER -> Color.orange;
+                    case BATTLESHIP -> Color.yellow;
+                    case CRUISER -> Color.green;
+                    case SUBMARINE -> Color.cyan;
+                    case DESTROYER -> Color.pink;
+                };
+                g.setColor(color);
 
-            int breadth = 1;
-            int length = s.length;
-            int arc = 20;
+                int breadth = 1;
+                int length = s.length;
+                int arc = 20;
 
-            breadth *= SQR_SIZE;
-            length *= SQR_SIZE;
+                breadth *= SQR_SIZE;
+                length *= SQR_SIZE;
 
-            switch (s.rotation) {
-                case VERTICAL -> g.fillRoundRect(s.x, s.y, breadth, length, arc, arc);
-                case HORIZONTAL -> g.fillRoundRect(s.x, s.y, length, breadth, arc, arc);
+                switch (s.rotation) {
+                    case VERTICAL -> g.fillRoundRect(s.x, s.y, breadth, length, arc, arc);
+                    case HORIZONTAL -> g.fillRoundRect(s.x, s.y, length, breadth, arc, arc);
+                }
             }
         }
     }
@@ -121,6 +144,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
             }
         }
         return null;
+    }
+    public boolean button(int x, int y) {
+        return x >= buttonX && x <= (buttonX + buttonWidth) && y >= buttonY && y <= (buttonY + buttonHeight);
     }
     public void actionPerformed(ActionEvent e) {}
     public void mousePressed(MouseEvent e) {

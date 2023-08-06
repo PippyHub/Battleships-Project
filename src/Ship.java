@@ -4,7 +4,7 @@ public class Ship {
         CARRIER, BATTLESHIP, CRUISER, SUBMARINE, DESTROYER
     }
     public enum Player {
-        PLAYER, ENEMY
+        PLAYER, ENEMY_HIDDEN, ENEMY_SHOWN
     }
     public enum Click {
         DESELECTED, SELECTED, PLACED
@@ -13,7 +13,6 @@ public class Ship {
         VERTICAL, HORIZONTAL
     }
     static final int SQR_SIZE = Board.SQR_SIZE;
-    static final int SQR_AMOUNT = Board.SQR_AMOUNT;
     int x, y, sX, sY, startX, startY;
     LinkedList<Ship> sh;
     Name name;
@@ -47,7 +46,6 @@ public class Ship {
         };
     }
     public boolean enemyPlace(int sX, int sY) {
-        if (((int) (Math.random() * 2) + 1) == 1) this.rotate();
         if (bounds(sX, sY) || overlap(sX, sY)){
             return false;
         } else {

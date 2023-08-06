@@ -4,15 +4,14 @@ public class Peg {
         MISS, HIT
     }
     static final int SQR_SIZE = Board.SQR_SIZE;
-    static final int SQR_AMOUNT = Board.SQR_AMOUNT;
-    int x, y, sX, sY;
+    int x, y, pX, pY;
     LinkedList<Peg> pe;
     Click click;
-    public Peg(int sX, int sY, Click click, LinkedList<Peg> pe) {
-        this.x = sX * SQR_SIZE;
-        this.y = sY * SQR_SIZE;
-        this.sX = sX;
-        this.sY = sY;
+    public Peg(int pX, int pY, Click click, LinkedList<Peg> pe) {
+        this.x = pX * SQR_SIZE;
+        this.y = pY * SQR_SIZE;
+        this.pX = pX;
+        this.pY = pY;
         this.click = click;
         this.pe = pe;
         pe.add(this);
