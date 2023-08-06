@@ -8,11 +8,12 @@ public class Peg {
     int x, y, sX, sY;
     LinkedList<Peg> pe;
     Click click;
-    public Peg(int sX, int sY, LinkedList<Peg> pe) {
+    public Peg(int sX, int sY, Click click, LinkedList<Peg> pe) {
         this.x = sX * SQR_SIZE;
         this.y = sY * SQR_SIZE;
         this.sX = sX;
         this.sY = sY;
+        this.click = click;
         this.pe = pe;
         pe.add(this);
     }

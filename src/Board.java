@@ -11,12 +11,14 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     static LinkedList<Ship> sh = new LinkedList<>();
     Images img = new Images();
     private final Image[] images;
-    public static Ship selectedShip = null;
+    private final Game game;
+    int placed = 0;
     public Board() {
         images = img.loadImages();
+        game = new Game(this);
         addMouseListener(this);
         addMouseMotionListener(this);
-        //player();
+        player();
         enemy();
     }
     public void player() {
@@ -33,7 +35,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         shipList(7, 1, Ship.Name.SUBMARINE, Ship.Player.ENEMY);
         shipList(9, 1, Ship.Name.DESTROYER, Ship.Player.ENEMY);
 
-        int placed = 0;
         while (placed != 5) {
             placed = 0;
             for (Ship s : sh) {
@@ -41,7 +42,6 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
                     int sX = (int) (Math.random() * 10) + 1;
                     int sY = (int) (Math.random() * 10) + 1;
                     sX += 10;
-                    System.out.println(sX);
                     if(s.enemyPlace(sX, sY)) placed++;
                 }
             }
@@ -50,15 +50,23 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     public void shipList(int sX, int sY, Ship.Name name, Ship.Player player) {
         new Ship(sX, sY, name, player, sh);
     }
-    public void pegList(int sX, int sY) {
-        new Peg(sX, sY, pe);
+    public void pegList(int sX, int sY, Peg.Click click) {
+        new Peg(sX, sY, click, pe);
     }
     public void paint(Graphics g) {
         g.setColor(new Color(86, 86, 86));
         g.fillRect(0, 0, BOARD_SIZE + SHIP_AREA_SIZE, BOARD_SIZE);
+        drawButton(g);
         drawGrid(g, SQR_AMOUNT, BOARD_SIZE);
         paintShips(g);
         paintPegs(g);
+    }
+    public void drawButton(Graphics g){
+        int x = 0;
+        int y = 0;
+        int width = 0;
+        int height = 0;
+        g.fillRect(x, y, width, height);
     }
     public void drawGrid(Graphics g, int gridSize, int size) {
         g.setColor(Color.BLACK);
@@ -95,12 +103,12 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         }
     }
     public void paintPegs(Graphics g) {
-        for (Peg s : pe) {
-            int index = switch (s.click) {
+        for (Peg p : pe) {
+            int index = switch (p.click) {
                 case MISS -> 0;
                 case HIT -> 1;
             };
-            g.drawImage(images[index], s.x, s.y, this);
+            g.drawImage(images[index], p.x, p.y, this);
         }
     }
     public static Ship getShip(int x, int y) {
@@ -116,40 +124,30 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public void actionPerformed(ActionEvent e) {}
     public void mousePressed(MouseEvent e) {
-        selectedShip = getShip(e.getX(), e.getY());
+        game.mousePressed(e);
     }
+
     public void mouseReleased(MouseEvent e) {
-        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
-            selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
-            selectedShip = null;
-            repaint();
-        }
+        game.mouseReleased(e);
     }
+
     public void mouseClicked(MouseEvent e) {
-        selectedShip = getShip(e.getX(), e.getY());
-        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
-            if (SwingUtilities.isRightMouseButton(e) && selectedShip.click == Ship.Click.PLACED) {
-                selectedShip.rotate();
-                selectedShip.canPlace(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
-            }
-            selectedShip = null;
-            repaint();
-        }
+        game.mouseClicked(e);
     }
+
     public void mouseExited(MouseEvent e) {
-        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
-            selectedShip.click = Ship.Click.DESELECTED;
-            selectedShip.deselect();
-            selectedShip = null;
-            repaint();
-        }
+        game.mouseExited();
     }
-    public void mouseEntered(MouseEvent e) {}
+
+    public void mouseEntered(MouseEvent e) {
+        game.mouseEntered();
+    }
+
     public void mouseDragged(MouseEvent e) {
-        if (selectedShip != null && selectedShip.player == Ship.Player.PLAYER) {
-            selectedShip.move(e.getX() / SQR_SIZE, e.getY() / SQR_SIZE);
-            repaint();
-        }
+        game.mouseDragged(e);
     }
-    public void mouseMoved(MouseEvent e) {}
+
+    public void mouseMoved(MouseEvent e) {
+        game.mouseMoved();
+    }
 }
