@@ -22,10 +22,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         enemy();
     }
     public void player() {
-        //shipList(11, 1, Ship.Name.CARRIER, Ship.Player.PLAYER_SHOWN);
-        //shipList(13, 1, Ship.Name.BATTLESHIP, Ship.Player.PLAYER_SHOWN);
-        //shipList(15, 1, Ship.Name.CRUISER, Ship.Player.PLAYER_SHOWN);
-        //shipList(17, 1, Ship.Name.SUBMARINE, Ship.Player.PLAYER_SHOWN);
+        shipList(11, 1, Ship.Name.CARRIER, Ship.Player.PLAYER_SHOWN);
+        shipList(13, 1, Ship.Name.BATTLESHIP, Ship.Player.PLAYER_SHOWN);
+        shipList(15, 1, Ship.Name.CRUISER, Ship.Player.PLAYER_SHOWN);
+        shipList(17, 1, Ship.Name.SUBMARINE, Ship.Player.PLAYER_SHOWN);
         shipList(19, 1, Ship.Name.DESTROYER, Ship.Player.PLAYER_SHOWN);
     }
     public void enemy() {
@@ -61,10 +61,10 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         if (game.state != Game.State.OVER) {
             drawGrid(g, SQR_AMOUNT, BOARD_SIZE, 0, 0);
             if (game.state == Game.State.PLAYING) drawGrid(g, SQR_AMOUNT, BOARD_SIZE, SHIP_AREA_SIZE, 0);
-            paintShips(g);
-            paintPegs(g);
-            if (placed() && game.state == Game.State.PLACING) button(g);
         }
+        paintShips(g);
+        paintPegs(g);
+        if (placed() && game.state == Game.State.PLACING) button(g);
     }
     public boolean placed() {
         int shipAmount = 0;
