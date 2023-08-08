@@ -91,7 +91,9 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
     }
     public void drawButton(Graphics g, int width, int height, int x, int y, int arc) {
         g.setColor(Color.magenta);
-        g.fillRoundRect(x, y, width, height, arc, arc);
+        g.fillRoundRect(x, y, width/ 2, height, arc, arc);
+        g.setColor(Color.red);
+        g.fillRoundRect(x + width / 2, y, width / 2, height, arc, arc);
     }
     public void drawGrid(Graphics g, int gridSize, int size, int startX, int startY) {
         g.setColor(Color.BLACK);
@@ -154,7 +156,12 @@ public class Board extends JPanel implements ActionListener, MouseListener, Mous
         return null;
     }
     public boolean button(int x, int y) {
-        return x >= buttonX && x <= (buttonX + buttonWidth) && y >= buttonY && y <= (buttonY + buttonHeight);
+        if (x >= buttonX && x <= (buttonX + buttonWidth) && y >= buttonY && y <= (buttonY + buttonHeight)){
+            if (x >= buttonX + buttonWidth / 2) game.difficulty = Game.Difficulty.HARD;
+            else game.difficulty = Game.Difficulty.EASY;
+            return true;
+        }
+        return false;
     }
     public void actionPerformed(ActionEvent e) {}
     public void mousePressed(MouseEvent e) {

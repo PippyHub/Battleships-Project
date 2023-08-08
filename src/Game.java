@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 public class Game {
     enum State {
         PLACING, PLAYING, OVER
@@ -7,11 +8,25 @@ public class Game {
     enum Turn {
         PLAYER, ENEMY
     }
+    enum Difficulty {
+        EASY, HARD
+    }
+    static class Coordinate {
+        int x;
+        int y;
+        public Coordinate(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
     static final int SQR_SIZE = Board.SQR_SIZE;
+    private ArrayList<Integer> previousClicks = new ArrayList<>();
     State state = State.PLACING;
     Turn turn = Turn.PLAYER;
     Board board;
+    Difficulty difficulty;
     public static Ship selectedShip = null;
+    int cycle;
     public Game(Board board) {
         this.board = board;
     }
@@ -32,15 +47,25 @@ public class Game {
     }
     public void enemyClick() {
         while (true) {
-            int cX = (int) (Math.random() * 10) + 1;
-            int cY = (int) (Math.random() * 10) + 1;
-
+            int cX = 0;
+            int cY = 0;
+            Ship sunk = getSunk();
+            if (difficulty == Difficulty.EASY) {
+                Coordinate coordinate = easyDifficulty();
+                cX = coordinate.x;
+                cY = coordinate.y;
+            } else if (difficulty == Difficulty.HARD) {
+                Coordinate coordinate = hardDifficulty(cX, cY, sunk);
+                cX = coordinate.x;
+                cY = coordinate.y;
+            }
             selectedShip = Board.getShip(cX * SQR_SIZE, cY * SQR_SIZE);
-
             Peg peg = overlap(cX, cY);
             Peg.Click click = selectedShip != null ? Peg.Click.HIT : Peg.Click.MISS;
 
             if (peg == null && boundary(cX, cY)) {
+                previousClicks.add(cX);
+                previousClicks.add(cY);
                 board.pegList(cX, cY, click);
                 if (selectedShip != null) {
                     selectedShip.sinking++;
@@ -48,12 +73,38 @@ public class Game {
                 }
                 if (over()) state = State.OVER;
                 selectedShip = null;
+                if (sunk != null && sunk.sunk == Ship.Sunk.SUNK) cycle = 0;
                 switchTurn();
-                break; // Break the loop since a valid hit was made.
+                break;
             }
         }
     }
+    public Ship getSunk() {
+        for (Ship s : Board.sh) {
+            if (s.sunk == Ship.Sunk.NOT_SUNK) {
+                return s;
+            }
+        }
+        return null;
+    }
+    public Coordinate easyDifficulty() {
+        int cX = (int) (Math.random() * 10);
+        int cY = (int) (Math.random() * 10);
 
+        return new Coordinate(cX, cY);
+    }
+    public Coordinate hardDifficulty(int cX, int cY, Ship sunk) {
+        if (sunk != null) {
+            cX = sunk.sX;
+            cY = sunk.sY;
+            switch (sunk.rotation) {
+                case VERTICAL -> cY += cycle;
+                case HORIZONTAL -> cX += cycle;
+            }
+            cycle++;
+        }
+        return new Coordinate(cX, cY);
+    }
     public Peg overlap(int cX, int cY) {
         for (Peg p : Board.pe) {
             if (cX == p.pX && cY == p.pY) return p;
