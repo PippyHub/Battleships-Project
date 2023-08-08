@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="All ships spawn">
+    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="Hard ai">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Board.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -175,8 +174,26 @@
       <option name="project" value="LOCAL" />
       <updated>1691329591708</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Hard ai">
+      <created>1691455462750</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1691455462750</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Board prints" />
@@ -194,6 +211,7 @@
     <MESSAGE value="Play against the enemy" />
     <MESSAGE value="Finished with dumb enemy ai" />
     <MESSAGE value="All ships spawn" />
-    <option name="LAST_COMMIT_MESSAGE" value="All ships spawn" />
+    <MESSAGE value="Hard ai" />
+    <option name="LAST_COMMIT_MESSAGE" value="Hard ai" />
   </component>
 </project>

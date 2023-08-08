@@ -11,6 +11,9 @@ public class Game {
     enum Difficulty {
         EASY, HARD
     }
+    enum Hunting {
+        RANDOM, HUNTING_RANDOM, HUNTING_DIRECTION
+    }
     static class Coordinate {
         int x;
         int y;
@@ -20,13 +23,20 @@ public class Game {
         }
     }
     static final int SQR_SIZE = Board.SQR_SIZE;
-    private ArrayList<Integer> previousClicks = new ArrayList<>();
     State state = State.PLACING;
     Turn turn = Turn.PLAYER;
     Board board;
     Difficulty difficulty;
     public static Ship selectedShip = null;
     int cycle;
+    Hunting hunting = Hunting.RANDOM;
+    private ArrayList<Integer> previousHits = new ArrayList<>();
+    boolean lastHit;
+    int miss;
+    boolean firstHuntingMove = true;
+    boolean wrongDirection;
+    int huntingCycle;
+    int huntX, huntY;
     public Game(Board board) {
         this.board = board;
     }
@@ -50,32 +60,49 @@ public class Game {
             int cX = 0;
             int cY = 0;
             Ship sunk = getSunk();
-            if (difficulty == Difficulty.EASY) {
-                Coordinate coordinate = easyDifficulty();
-                cX = coordinate.x;
-                cY = coordinate.y;
-            } else if (difficulty == Difficulty.HARD) {
-                Coordinate coordinate = hardDifficulty(cX, cY, sunk);
-                cX = coordinate.x;
-                cY = coordinate.y;
+            Coordinate coordinates = null;
+            switch (difficulty) {
+                case EASY -> coordinates = easyDifficulty();
+                case HARD -> coordinates = hardDifficulty(cX, cY, sunk);
             }
+            cX = coordinates.x;
+            cY = coordinates.y;
             selectedShip = Board.getShip(cX * SQR_SIZE, cY * SQR_SIZE);
             Peg peg = overlap(cX, cY);
             Peg.Click click = selectedShip != null ? Peg.Click.HIT : Peg.Click.MISS;
-
             if (peg == null && boundary(cX, cY)) {
-                previousClicks.add(cX);
-                previousClicks.add(cY);
                 board.pegList(cX, cY, click);
+                previousHits.add(cX);
+                previousHits.add(cY);
                 if (selectedShip != null) {
                     selectedShip.sinking++;
                     sunk();
+                    lastHit = true;
+                    if (hunting == Hunting.RANDOM) {
+                        hunting = Hunting.HUNTING_RANDOM;
+                        firstHuntingMove = true;
+                    } else if (hunting == Hunting.HUNTING_RANDOM && !firstHuntingMove){
+                        hunting = Hunting.HUNTING_DIRECTION;
+                    }
+                    if (hunting == Hunting.HUNTING_DIRECTION) {
+                        wrongDirection = false;
+                        if (selectedShip.sunk == Ship.Sunk.SUNK) {
+                            hunting = Hunting.RANDOM;
+                        }
+                    }
+                } else {
+                    lastHit = false;
+                    if (hunting == Hunting.HUNTING_DIRECTION) {
+                        wrongDirection = true;
+                    }
                 }
                 if (over()) state = State.OVER;
                 selectedShip = null;
                 if (sunk != null && sunk.sunk == Ship.Sunk.SUNK) cycle = 0;
                 switchTurn();
                 break;
+            } else {
+                wrongDirection = true;
             }
         }
     }
@@ -90,7 +117,52 @@ public class Game {
     public Coordinate easyDifficulty() {
         int cX = (int) (Math.random() * 10);
         int cY = (int) (Math.random() * 10);
+        if (hunting == Hunting.RANDOM){
+            huntingCycle = 0;
+        }
+        if (hunting == Hunting.HUNTING_RANDOM) {
+            if (firstHuntingMove) {
+                huntX = previousHits.get(previousHits.size() - 2);
+                huntY = previousHits.get(previousHits.size() - 1);
+                firstHuntingMove = false;
+            }
+            cX = huntX;
+            cY = huntY;
+            int[][] randomDirection = {
+                {0, -1},
+                {1, 0},
+                {0, 1},
+                {-1, 0},
+            };
+            cX += randomDirection[huntingCycle][0];
+            cY += randomDirection[huntingCycle][1];
+            huntingCycle++;
+        }
+        if (hunting == Hunting.HUNTING_DIRECTION) {
+            int prevX = previousHits.get(previousHits.size() - 2);
+            int prevY = previousHits.get(previousHits.size() - 1);
 
+            cX = prevX;
+            cY = prevY;
+
+            int signX;
+            int signY;
+
+            signX = (int) Math.signum(prevX - huntX);
+            signY = (int) Math.signum(prevY - huntY);
+
+            cX += signX;
+            cY += signY;
+
+            if (wrongDirection) {
+                previousHits.add(huntX);
+                previousHits.add(huntY);
+                cX = huntX;
+                cY = huntY;
+                cX -= signX;
+                cY -= signY;
+            }
+        }
         return new Coordinate(cX, cY);
     }
     public Coordinate hardDifficulty(int cX, int cY, Ship sunk) {
