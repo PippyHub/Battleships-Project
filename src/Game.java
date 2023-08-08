@@ -87,13 +87,18 @@ public class Game {
                     if (hunting == Hunting.HUNTING_DIRECTION) {
                         wrongDirection = false;
                         if (selectedShip.sunk == Ship.Sunk.SUNK) {
+                            miss = 0;
                             hunting = Hunting.RANDOM;
                         }
                     }
                 } else {
+                    miss++;
                     lastHit = false;
                     if (hunting == Hunting.HUNTING_DIRECTION) {
                         wrongDirection = true;
+                        if (miss >= 2) {
+                            hunting = Hunting.HUNTING_RANDOM;
+                        }
                     }
                 }
                 if (over()) state = State.OVER;
@@ -117,8 +122,21 @@ public class Game {
     public Coordinate easyDifficulty() {
         int cX = (int) (Math.random() * 10);
         int cY = (int) (Math.random() * 10);
-        if (hunting == Hunting.RANDOM){
-            huntingCycle = 0;
+        if (hunting == Hunting.RANDOM) {
+            /*for (int i = 0; i < previousHits.size(); i += 2) {
+                int x = previousHits.get(i);
+                int y = previousHits.get(i + 1);
+                Ship ship = Board.getShip(x * SQR_SIZE, y * SQR_SIZE);
+                if (ship != null) {
+                    System.out.println(true);
+                    firstHuntingMove = false;
+                    huntX = x;
+                    huntY = y;
+                    hunting = Hunting.HUNTING_RANDOM;
+                    break;
+                }
+            }*/
+            huntingCycle = (int) (Math.random() * 4);
         }
         if (hunting == Hunting.HUNTING_RANDOM) {
             if (firstHuntingMove) {
@@ -136,24 +154,18 @@ public class Game {
             };
             cX += randomDirection[huntingCycle][0];
             cY += randomDirection[huntingCycle][1];
-            huntingCycle++;
+            if (huntingCycle == 3) huntingCycle = 0;
+            else huntingCycle++;
         }
         if (hunting == Hunting.HUNTING_DIRECTION) {
             int prevX = previousHits.get(previousHits.size() - 2);
             int prevY = previousHits.get(previousHits.size() - 1);
-
             cX = prevX;
             cY = prevY;
-
-            int signX;
-            int signY;
-
-            signX = (int) Math.signum(prevX - huntX);
-            signY = (int) Math.signum(prevY - huntY);
-
+            int signX = (int) Math.signum(prevX - huntX);
+            int signY = (int) Math.signum(prevY - huntY);
             cX += signX;
             cY += signY;
-
             if (wrongDirection) {
                 previousHits.add(huntX);
                 previousHits.add(huntY);
