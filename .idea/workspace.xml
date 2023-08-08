@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="Algo finished">
+    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="fixed miss code">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
     </list>
@@ -189,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1691473574924</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="fixed miss code">
+      <created>1691487189045</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1691487189045</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -221,6 +228,7 @@
     <MESSAGE value="All ships spawn" />
     <MESSAGE value="Hard ai" />
     <MESSAGE value="Algo finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="Algo finished" />
+    <MESSAGE value="fixed miss code" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed miss code" />
   </component>
 </project>

@@ -165,12 +165,6 @@ public class Game {
             cX += signX;
             cY += signY;
 
-            Peg peg = overlap(cX, cY);
-            if (peg != null) {
-                miss++;
-                wrongDirection = true;
-            }
-
             if (wrongDirection) {
                 previousHits.add(huntX);
                 previousHits.add(huntY);
@@ -178,6 +172,12 @@ public class Game {
                 cY = huntY;
                 cX -= signX;
                 cY -= signY;
+            }
+
+            Peg peg = overlap(cX, cY);
+            if (peg != null) {
+                miss++;
+                wrongDirection = true;
             }
         }
         return new Coordinate(cX, cY);
