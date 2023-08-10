@@ -176,6 +176,13 @@ public class Game {
             huntingCycle = (int) ((Math.random() * 3) + 1);
             randomCycle = 0;
         }
+        if (hunting == Hunting.RANDOM){
+            cX = (int) (Math.random() * 10);
+            cY = (int) (Math.random() * 10);
+
+            huntingCycle = (int) ((Math.random() * 3) + 1);
+            randomCycle = 0;
+        }
         return new Coordinate(cX, cY);
     }
     public Coordinate hardDifficulty(int cX, int cY, Ship sunk) {
