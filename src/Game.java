@@ -128,6 +128,26 @@ public class Game {
         if (randomCycle > 4) {
             hunting = Hunting.RANDOM;
         }
+        if (hunting == Hunting.RANDOM){
+            cX = (int) (Math.random() * 10);
+            cY = (int) (Math.random() * 10);
+
+            for (Peg p : Board.pe) {
+                if (p.click == Peg.Click.HIT) {
+                    Ship s = Board.getShip(p.pX * SQR_SIZE, p.pY * SQR_SIZE);
+                    if (s != null && s.sunk == Ship.Sunk.NOT_SUNK && s.player == Ship.Player.PLAYER_SHOWN) {
+                        huntX = p.pX;
+                        huntY = p.pY;
+                        hunting = Hunting.HUNTING_RANDOM;
+                        firstHuntingMove = false;
+                        break;
+                    }
+                }
+            }
+
+            huntingCycle = (int) ((Math.random() * 3) + 1);
+            randomCycle = 0;
+        }
         if (hunting == Hunting.HUNTING_RANDOM) {
             if (firstHuntingMove) {
                 huntX = previousHits.get(previousHits.size() - 2);
@@ -172,13 +192,6 @@ public class Game {
                 cX -= signX;
                 cY -= signY;
             }
-
-            huntingCycle = (int) ((Math.random() * 3) + 1);
-            randomCycle = 0;
-        }
-        if (hunting == Hunting.RANDOM){
-            cX = (int) (Math.random() * 10);
-            cY = (int) (Math.random() * 10);
 
             huntingCycle = (int) ((Math.random() * 3) + 1);
             randomCycle = 0;
