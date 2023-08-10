@@ -30,13 +30,13 @@ public class Game {
     public static Ship selectedShip = null;
     int cycle;
     Hunting hunting = Hunting.RANDOM;
-    private ArrayList<Integer> previousHits = new ArrayList<>();
+    private final ArrayList<Integer> previousHits = new ArrayList<>();
     boolean lastHit;
-    int miss;
     boolean firstHuntingMove = true;
     boolean wrongDirection;
-    int huntingCycle;
+    int randomCycle, huntingCycle;
     int huntX, huntY;
+    int miss;
     public Game(Board board) {
         this.board = board;
     }
@@ -61,6 +61,9 @@ public class Game {
             int cY = 0;
             Ship sunk = getSunk();
             Coordinate coordinates = null;
+            if (miss >= 2) {
+                hunting = Hunting.HUNTING_RANDOM;
+            }
             switch (difficulty) {
                 case EASY -> coordinates = easyDifficulty();
                 case HARD -> coordinates = hardDifficulty(cX, cY, sunk);
@@ -75,19 +78,17 @@ public class Game {
                 previousHits.add(cX);
                 previousHits.add(cY);
                 if (selectedShip != null) {
+                    miss = 0;
                     selectedShip.sinking++;
                     sunk();
                     lastHit = true;
                     if (hunting == Hunting.RANDOM) {
-                        miss = 0;
                         hunting = Hunting.HUNTING_RANDOM;
                         firstHuntingMove = true;
                     } else if (hunting == Hunting.HUNTING_RANDOM && !firstHuntingMove){
-                        miss = 0;
                         hunting = Hunting.HUNTING_DIRECTION;
                     }
                     if (hunting == Hunting.HUNTING_DIRECTION) {
-                        System.out.println(miss);
                         wrongDirection = false;
                         if (selectedShip.sunk == Ship.Sunk.SUNK) {
                             hunting = Hunting.RANDOM;
@@ -96,13 +97,8 @@ public class Game {
                 } else {
                     lastHit = false;
                     if (hunting == Hunting.HUNTING_DIRECTION) {
+                        miss++;
                         wrongDirection = true;
-                        miss ++;
-                        System.out.println(miss);
-                        if (miss >= 2) {
-                            hunting = Hunting.HUNTING_RANDOM;
-                            firstHuntingMove = false;
-                        }
                     }
                 }
                 if (over()) state = State.OVER;
@@ -111,7 +107,10 @@ public class Game {
                 switchTurn();
                 break;
             } else {
-                wrongDirection = true;
+                if (hunting == Hunting.HUNTING_DIRECTION) {
+                    miss++;
+                    wrongDirection = true;
+                }
             }
         }
     }
@@ -124,11 +123,10 @@ public class Game {
         return null;
     }
     public Coordinate easyDifficulty() {
-        int cX = (int) (Math.random() * 10);
-        int cY = (int) (Math.random() * 10);
-        if (hunting == Hunting.RANDOM){
-            huntingCycle = (int) ((Math.random() * 3) + 1);
-            huntingCycle = 1;
+        int cX = 0;
+        int cY = 0;
+        if (randomCycle > 4) {
+            hunting = Hunting.RANDOM;
         }
         if (hunting == Hunting.HUNTING_RANDOM) {
             if (firstHuntingMove) {
@@ -148,6 +146,7 @@ public class Game {
             cY += randomDirection[huntingCycle][1];
             if (huntingCycle == 3) huntingCycle = 0;
             else huntingCycle++;
+            randomCycle++;
         }
         if (hunting == Hunting.HUNTING_DIRECTION) {
             int prevX = previousHits.get(previousHits.size() - 2);
@@ -174,11 +173,8 @@ public class Game {
                 cY -= signY;
             }
 
-            Peg peg = overlap(cX, cY);
-            if (peg != null) {
-                miss++;
-                wrongDirection = true;
-            }
+            huntingCycle = (int) ((Math.random() * 3) + 1);
+            randomCycle = 0;
         }
         return new Coordinate(cX, cY);
     }

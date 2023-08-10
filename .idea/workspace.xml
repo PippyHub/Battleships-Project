@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="fixed miss code">
+    <list default="true" id="96e5a7a2-2345-4df2-b1e3-f9341a4d5819" name="Changes" comment="fixed miss code for wrong direction">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.java" afterDir="false" />
     </list>
