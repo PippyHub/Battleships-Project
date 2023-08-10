@@ -59,14 +59,14 @@ public class Game {
         while (true) {
             int cX = 0;
             int cY = 0;
-            Ship sunk = getSunk();
+            Ship unSunk = getUnSunk();
             Coordinate coordinates = null;
             if (miss >= 2) {
                 hunting = Hunting.HUNTING_RANDOM;
             }
             switch (difficulty) {
                 case EASY -> coordinates = easyDifficulty();
-                case HARD -> coordinates = hardDifficulty(cX, cY, sunk);
+                case HARD -> coordinates = hardDifficulty(cX, cY, unSunk);
             }
             cX = coordinates.x;
             cY = coordinates.y;
@@ -103,7 +103,7 @@ public class Game {
                 }
                 if (over()) state = State.OVER;
                 selectedShip = null;
-                if (sunk != null && sunk.sunk == Ship.Sunk.SUNK) cycle = 0;
+                if (unSunk != null && unSunk.sunk == Ship.Sunk.SUNK) cycle = 0;
                 switchTurn();
                 break;
             } else {
@@ -114,7 +114,7 @@ public class Game {
             }
         }
     }
-    public Ship getSunk() {
+    public Ship getUnSunk() {
         for (Ship s : Board.sh) {
             if (s.sunk == Ship.Sunk.NOT_SUNK) {
                 return s;
@@ -198,11 +198,11 @@ public class Game {
         }
         return new Coordinate(cX, cY);
     }
-    public Coordinate hardDifficulty(int cX, int cY, Ship sunk) {
-        if (sunk != null) {
-            cX = sunk.sX;
-            cY = sunk.sY;
-            switch (sunk.rotation) {
+    public Coordinate hardDifficulty(int cX, int cY, Ship unSunk) {
+        if (unSunk != null) {
+            cX = unSunk.sX;
+            cY = unSunk.sY;
+            switch (unSunk.rotation) {
                 case VERTICAL -> cY += cycle;
                 case HORIZONTAL -> cX += cycle;
             }
